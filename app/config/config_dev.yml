@@ -12,7 +12,13 @@ web_profiler:
     intercept_redirects: false
 
 monolog:
+    channels: ['api']
     handlers:
+        api_log:
+            type: stream
+            path: '%kernel.logs_dir%/api.log'
+            level: debug
+            channels: [api]
         main:
             type: stream
             path: '%kernel.logs_dir%/%kernel.environment%.log'

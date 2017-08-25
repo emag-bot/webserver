@@ -1,0 +1,3 @@
+webhook_action:
+    path: /webhook
+    defaults: { _controller: AppBundle:Api:webhook }

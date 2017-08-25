@@ -8,6 +8,7 @@ imports:
 #        query_cache_driver: apc
 
 monolog:
+    channels: ['api']
     handlers:
         main:
             type: fingers_crossed
@@ -20,3 +21,8 @@ monolog:
         console:
             type: console
             process_psr_3_messages: false
+        api_log:
+            type: stream
+            path: '%kernel.logs_dir%/api.log'
+            level: debug
+            channels: [api]
