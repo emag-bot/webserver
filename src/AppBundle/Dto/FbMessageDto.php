@@ -10,11 +10,18 @@ namespace AppBundle\Dto;
 
 class FbMessageDto implements DtoInterface
 {
+    /** @var  string */
     protected $text;
 
     public function export(): array
     {
-        // TODO: Implement export() method.
+        $data = [];
+
+        if (!empty($this->text)) {
+            $data['text'] = $this->text;
+        }
+
+        return $data;
     }
 
     public function create(array $data)
@@ -25,5 +32,13 @@ class FbMessageDto implements DtoInterface
     public function getText()
     {
         return $this->text;
+    }
+
+    /**
+     * @param string $text
+     */
+    public function setText($text)
+    {
+        $this->text = $text;
     }
 }

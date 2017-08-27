@@ -9,5 +9,6 @@
                 <argument type="service" id="monolog.logger.api"/>
             </call>
         </service>
+        <service id="fb.api.service" class="AppBundle\Service\FbApiService"/>
     </services>
 </container>

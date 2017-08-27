@@ -10,11 +10,18 @@ namespace AppBundle\Dto;
 
 class FbRecipientDto implements DtoInterface
 {
+    /** @var  int */
     protected $id;
 
     public function export(): array
     {
-        // TODO: Implement export() method.
+        $data = [];
+
+        if (!empty($this->id)) {
+            $data['id'] = $this->id;
+        }
+
+        return $data;
     }
 
     public function create(array $data)
@@ -23,10 +30,18 @@ class FbRecipientDto implements DtoInterface
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
     }
 }

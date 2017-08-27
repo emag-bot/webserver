@@ -32,7 +32,17 @@ class FbMessagingDto implements DtoInterface
 
     public function export(): array
     {
-        // TODO: Implement export() method.
+        $data = [];
+
+        if (!empty($this->message)) {
+            $data['message'] = $this->message->export();
+        }
+
+        if (!empty($this->recipient)) {
+            $data['recipient'] = $this->recipient->export();
+        }
+
+        return $data;
     }
 
     public function create(array $data)
@@ -64,5 +74,29 @@ class FbMessagingDto implements DtoInterface
     public function getRecipient()
     {
         return $this->recipient;
+    }
+
+    /**
+     * @param FbSenderDto $sender
+     */
+    public function setSender($sender)
+    {
+        $this->sender = $sender;
+    }
+
+    /**
+     * @param FbRecipientDto $recipient
+     */
+    public function setRecipient($recipient)
+    {
+        $this->recipient = $recipient;
+    }
+
+    /**
+     * @param FbMessageDto $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
     }
 }
