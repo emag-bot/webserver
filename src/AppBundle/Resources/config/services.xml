@@ -10,5 +10,6 @@
             </call>
         </service>
         <service id="fb.api.service" class="AppBundle\Service\FbApiService"/>
+        <service id="vision.api.service" class="AppBundle\Service\VisionApiService"/>
     </services>
 </container>

@@ -1,3 +1,7 @@
 webhook_action:
     path: /webhook
     defaults: { _controller: AppBundle:Api:webhook }
+
+create_product:
+    path: /product
+    defaults: { _controller: AppBundle:Api:createProduct}
