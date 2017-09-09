@@ -14,5 +14,7 @@
         <service id="user.service" class="AppBundle\Service\UserService">
             <argument type="service" id="doctrine"/>
         </service>
+        <service id="gearman.service" class="AppBundle\Service\GearmanService">
+        </service>
     </services>
 </container>

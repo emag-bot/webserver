@@ -67,14 +67,14 @@ class VisionApiService
 
         $labels = [];
 
-        $i = 0;
+//        $i = 0;
 
         foreach ($data['responses'][0]['labelAnnotations'] as $label) {
-            if ($i <= 2) {
-                $i++;
-            } else {
-                break;
-            }
+//            if ($i <= 2) {
+//                $i++;
+//            } else {
+//                break;
+//            }
 
             $labels [] = $label['description'];
         }

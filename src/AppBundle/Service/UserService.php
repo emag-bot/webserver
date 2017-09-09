@@ -22,6 +22,4 @@ class UserService
     public function checkUser(int $facebookId = 0):bool
     {
     }
-
-    public function addUser(int $facebookId = 0):bool
 }

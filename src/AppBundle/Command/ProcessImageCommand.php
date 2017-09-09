@@ -3,20 +3,23 @@
 namespace AppBundle\Command;
 
 use AppBundle\Entity\Image;
+use AppBundle\Service\GearmanService;
 use Doctrine\Bundle\DoctrineBundle\Registry;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ProcessImageCommand extends ContainerAwareCommand
 {
     /**
-     * @return Registry
+     * @return EntityManager
      */
-    private function getDoctrine()
+    private function getManager()
     {
-        return $this->get('doctrine');
+        return $this->getContainer()->get('doctrine.orm.entity_manager');
     }
 
     /**
@@ -26,7 +29,9 @@ class ProcessImageCommand extends ContainerAwareCommand
     {
         $this
             ->setName('image:process')
-            ->setDescription('Send image to python and receive raw data');
+            ->setDescription('Send image to python and receive raw data')
+            ->addArgument('start', InputArgument::REQUIRED, 'Image start')
+            ->addArgument('stop', InputArgument::REQUIRED, 'Image stop');
     }
 
     /**
@@ -34,9 +39,22 @@ class ProcessImageCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var EntityRepository $repo */
-        $repo = $this->getDoctrine()->getManager()->getRepository(Image::class);
+        $start = $input->getArgument('start');
+        $stop = $input->getArgument('stop');
 
-        $repo->findBy(['raw' => null]);
+        /** @var GearmanService $service */
+        $service = $this->getContainer()->get(GearmanService::ID);
+
+        $repo = $this->getManager()->getRepository(Image::class);
+        $images = $repo->findBy([], [], $stop, $start);
+
+        /** @var Image $image */
+        foreach ($images as $image) {
+            var_dump($image->getId());
+            $image->setRaw($service->getRawData($image->getUrl()));
+            $this->getManager()->persist($image);
+            $this->getManager()->flush();
+        }
+
     }
 }
