@@ -24,5 +24,7 @@
             <tag name="quick-reply-strategy"/>
         </service>
         <service id="quick.reply.service" class="AppBundle\Service\QuickReplyService"/>
+        <service id="gearman.service" class="AppBundle\Service\GearmanService">
+        </service>
     </services>
 </container>
