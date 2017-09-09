@@ -13,6 +13,9 @@ class FbRecipientDto implements DtoInterface
     /** @var  int */
     protected $id;
 
+    /**
+     * @return array
+     */
     public function export(): array
     {
         $data = [];

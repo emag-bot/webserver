@@ -21,6 +21,11 @@ class User
     protected $facebookId;
 
     /**
+     * @ORM\Column(type="smallint", nullable=false, unique=false)
+     */
+    protected $converstationStateId;
+
+    /**
      * @return mixed
      */
     public function getFacebookId()
@@ -35,6 +40,24 @@ class User
     public function setFacebookId($facebookId)
     {
         $this->facebookId = $facebookId;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getConverstationStateId()
+    {
+        return $this->converstationStateId;
+    }
+
+    /**
+     * @param mixed $converstationStateId
+     * @return User
+     */
+    public function setConverstationStateId($converstationStateId)
+    {
+        $this->converstationStateId = $converstationStateId;
         return $this;
     }
 }

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cristian
- * Date: 25.08.2017
- * Time: 22:25
- */
 
 namespace AppBundle\Dto;
 
@@ -14,14 +8,34 @@ class FbRequestDto implements DtoInterface
 {
     protected $object;
 
-    /** @var  ArrayCollection */
+    /** @var
+     * ArrayCollection
+     */
     protected $entries;
 
+    /**
+     * @return array
+     */
     public function export(): array
     {
+        $data = [];
 
+        if (!empty($this->object)) {
+            $data['object'] = $this->object;
+        }
+
+        if (!empty($this->entries)) {
+            foreach ($this->entries as $entry) {
+                $data['entry'][] = $entry;
+            }
+        }
+
+        return $data;
     }
 
+    /**
+     * @param array $data
+     */
     public function create(array $data)
     {
         $this->object = $data['object'];

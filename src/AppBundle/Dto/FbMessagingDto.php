@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cristian
- * Date: 25.08.2017
- * Time: 22:38
- */
 
 namespace AppBundle\Dto;
 
@@ -29,7 +23,9 @@ class FbMessagingDto implements DtoInterface
         $this->message = new FbMessageDto();
     }
 
-
+    /**
+     * @return array
+     */
     public function export(): array
     {
         $data = [];
@@ -45,6 +41,9 @@ class FbMessagingDto implements DtoInterface
         return $data;
     }
 
+    /**
+     * @param array $data
+     */
     public function create(array $data)
     {
         $this->sender->create($data['sender']);

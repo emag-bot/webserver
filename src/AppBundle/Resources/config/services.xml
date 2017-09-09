@@ -9,10 +9,20 @@
                 <argument type="service" id="monolog.logger.api"/>
             </call>
         </service>
-        <service id="fb.api.service" class="AppBundle\Service\FbApiService"/>
+        <service id="fb.api.service" class="AppBundle\Service\FbApiService">
+            <argument>%token%</argument>
+            <argument>%facebook_uri%</argument>
+        </service>
         <service id="vision.api.service" class="AppBundle\Service\VisionApiService"/>
         <service id="user.service" class="AppBundle\Service\UserService">
-            <argument type="service" id="doctrine"/>
+            <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
+        <service id="abstract.strategy" class="AppBundle\Service\Strategy\AbstractStrategy">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
+        <service id="strategy.one" class="AppBundle\Service\Strategy\StrategyOne">
+            <tag name="quick-reply-strategy"/>
+        </service>
+        <service id="quick.reply.service" class="AppBundle\Service\QuickReplyService"/>
     </services>
 </container>

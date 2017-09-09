@@ -66,16 +66,7 @@ class VisionApiService
         $data = json_decode($result->getBody()->getContents(), true);
 
         $labels = [];
-
-        $i = 0;
-
         foreach ($data['responses'][0]['labelAnnotations'] as $label) {
-            if ($i <= 2) {
-                $i++;
-            } else {
-                break;
-            }
-
             $labels [] = $label['description'];
         }
 

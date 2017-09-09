@@ -33,26 +33,26 @@ class ApiController extends Controller
         /** @var Logger $logger */
         $logger = $this->get('monolog.logger.api');
 
-        /** @var FbApiService $service */
-        $service = $this->get(FbApiService::ID);
+        /** @var FbApiService $fbApiService */
+        $fbApiService = $this->get(FbApiService::ID);
 
         $data = json_decode($request->getContent(), true);
-        if (empty($data['entry']['id'])) {
-            return new JsonResponse();
-        }
-
-        $this->get('user.service')->checkUser($data['entry']['id']);
-
-
         $fbRequest = new FbRequestDto();
         $fbRequest->create($data);
 
         /** @var FbMessagingDto $message */
         foreach ($fbRequest->getAllMessages() as $message) {
+            $senderId = $message->getSender()->getId();
+            if (empty($senderId)) {
+                return new JsonResponse();
+            }
+            $this->get('user.service')->checkUser($senderId);
             $logger->addInfo("Got message: [{$message->getMessage()->getText()}] from [{$message->getSender()->getId()}]");
 
             $text = strrev($message->getMessage()->getText());
-            $service->sendTextMessage($message->getSender()->getId(), $text);
+            $quickReplies = $message->getMessage()->export();
+            $quickReplies = !empty($quickReplies['quick_replies']) ? $quickReplies['quick_replies'] : [];
+            $fbApiService->sendMessage($senderId, $text, $quickReplies);
         }
 
 

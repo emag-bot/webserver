@@ -2,7 +2,6 @@
 
 namespace AppBundle\Service;
 
-
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityManager;
 
@@ -38,7 +37,6 @@ class UserService
             $this->addUser($facebookId);
             return false;
         }
-
     }
 
     /**
@@ -48,7 +46,8 @@ class UserService
     {
         $user = new User();
         $user->setFacebookId($facebookId);
-        $this->entityManager->persist();
+        $user->setConverstationStateId(1);
+        $this->entityManager->persist($user);
         $this->entityManager->flush();
     }
 }
