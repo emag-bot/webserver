@@ -37,9 +37,12 @@ class ApiController extends Controller
         $service = $this->get(FbApiService::ID);
 
         $data = json_decode($request->getContent(), true);
-        if (!empty($data['entry']['id'])) {
-            $this->get('user.service')->checkUser($data['entry']['id']);
+        if (empty($data['entry']['id'])) {
+            return new JsonResponse();
         }
+
+        $this->get('user.service')->checkUser($data['entry']['id']);
+
 
         $fbRequest = new FbRequestDto();
         $fbRequest->create($data);
