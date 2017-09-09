@@ -28,10 +28,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ApiController extends Controller
 {
-    public function webhookAction(Request $request)
+    public function webHookAction(Request $request)
     {
         /** @var Logger $logger */
         $logger = $this->get('monolog.logger.api');
+
+        // laurentiu suge cock
 
         /** @var FbApiService $service */
         $service = $this->get(FbApiService::ID);
