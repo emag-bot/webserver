@@ -11,5 +11,8 @@
         </service>
         <service id="fb.api.service" class="AppBundle\Service\FbApiService"/>
         <service id="vision.api.service" class="AppBundle\Service\VisionApiService"/>
+        <service id="user.service" class="AppBundle\Service\UserService">
+            <argument type="service" id="doctrine"/>
+        </service>
     </services>
 </container>

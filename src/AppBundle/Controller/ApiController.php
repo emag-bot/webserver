@@ -33,12 +33,13 @@ class ApiController extends Controller
         /** @var Logger $logger */
         $logger = $this->get('monolog.logger.api');
 
-        // laurentiu suge cock
-
         /** @var FbApiService $service */
         $service = $this->get(FbApiService::ID);
 
         $data = json_decode($request->getContent(), true);
+        if (!empty($data['entry']['id'])) {
+            $this->get('user.service')->checkUser($data['entry']['id']);
+        }
 
         $fbRequest = new FbRequestDto();
         $fbRequest->create($data);
