@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: cristian
- * Date: 25.08.2017
- * Time: 13:10
- */
 
 namespace AppBundle\Controller;
 
@@ -17,6 +11,7 @@ use AppBundle\Entity\Image;
 use AppBundle\Entity\Label;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\User;
+use AppBundle\Exception\QuickReplyException;
 use AppBundle\Service\FbApiService;
 use AppBundle\Service\VisionApiService;
 use GuzzleHttp\Client;
@@ -53,11 +48,12 @@ class ApiController extends Controller
             $quickReplies = !empty($quickReplies['quick_replies']) ? $quickReplies['quick_replies'] : [];
             $attachments = $message->getMessage()->export();
             $attachments = !empty($attachments['attachments']) ? $attachments['attachments'] : [];
-            $this->get('quick.reply.service')->handle($senderId, $text, $quickReplies, $attachments);
-            $logger->addInfo("Got message: [{$message->getMessage()->getText()}] from [{$message->getSender()->getId()}]");
+            try {
+                $this->get('quick.reply.service')->handle($senderId, $text, $quickReplies, $attachments);
+            } catch (QuickReplyException $e) {
+                $logger->addCritical($e->getMessage());
+            }
         }
-
-
         return new JsonResponse();
     }
 
@@ -65,63 +61,11 @@ class ApiController extends Controller
     {
         /** @var VisionApiService $service */
         $service = $this->get(VisionApiService::ID);
-
         $data = json_decode($request->getContent(), true);
-        $client = new Client();
-
-        $product = new Product();
-
-        $product->setLink($data['link']);
-        $product->setBrand($data['brand']);
-        $product->setCategory($data['category']);
-        $product->setName($data['name']);
-
-        foreach ($data["images"] as $url) {
-            $image = new Image();
-
-            $guid = $this->generateGuid();
-            $path = '/var/www/static/' . $guid;
-
-            $resource = fopen($path, 'w');
-            $response = $client->get($url, [
-                'sink' => $resource
-            ]);
-
-            $type = $response->getHeaderLine("Content-Type");
-
-            if ($type == "image/jpeg") {
-                $raw = imagecreatefromjpeg($path);
-                imagepng($raw, $path . '.png');
-                unlink($path);
-            } else {
-                rename($path, $path . '.png');
-            }
-
-            $image->setUrl('http://static.emag-bot.com/' . $guid . '.png');
-
-            foreach ($service->getLabels($image->getUrl()) as $label) {
-                $image->addLabel($label);
-            }
-
-            $product->addImage($image);
-        }
-
-        $this->getDoctrine()->getManager()->persist($product);
-        $this->getDoctrine()->getManager()->flush();
-
-
         return new JsonResponse(
             [
-                "id" => $product->getId()
+                "id" => $this->get('product.service')->createProduct($data)->getId()
             ]
         );
-    }
-
-    public function generateGuid()
-    {
-        $data = openssl_random_pseudo_bytes(16);
-        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);    // set version to 0100
-        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);    // set bits 6-7 to 10
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 }

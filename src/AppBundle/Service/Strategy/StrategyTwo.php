@@ -27,7 +27,7 @@ class StrategyTwo extends AbstractStrategy
                 $top = array_splice($ids, 0 , 3);
                 $this->fbApiService->sendProducts($user->getFacebookId(), $this->getProducts($top), $this->quickReplies);
             }
-        }error_log(StrategyThree::STATE_ID);
+        }
         $user->setConverstationStateId(StrategyThree::STATE_ID);
         $this->entityManager->flush($user);
     }

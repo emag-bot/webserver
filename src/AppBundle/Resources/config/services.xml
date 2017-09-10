@@ -35,7 +35,14 @@
         <service id="quick.reply.service" class="AppBundle\Service\QuickReplyService">
             <argument type="service" id="doctrine.orm.entity_manager"/>
         </service>
-        <service id="gearman.service" class="AppBundle\Service\GearmanService">
+        <service id="gearman.service" class="AppBundle\Service\GearmanService"/>
+        <service id="product.service" class="AppBundle\Service\ProductService">
+            <call method="setStaticPath">
+                <argument>%static_path%</argument>
+            </call>
+            <call method="setStaticUrl">
+                <argument>%static_url%</argument>
+            </call>
         </service>
     </services>
 </container>
