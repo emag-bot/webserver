@@ -9,6 +9,12 @@ class StrategyThree extends AbstractStrategy
 {
     const STATE_ID = 3;
 
+    /**
+     * @param User $user
+     * @param $text
+     * @param $quickReplies
+     * @param $attachments
+     */
     public function process(User $user, $text, $quickReplies, $attachments)
     {
         $user->setConverstationStateId(StrategyOne::STATE_ID);
@@ -26,6 +32,14 @@ class StrategyThree extends AbstractStrategy
         }
     }
 
+    /**
+     * @param $senderId
+     * @param $conversationStateId
+     * @param $text
+     * @param $quickReplies
+     * @param $attachments
+     * @return bool
+     */
     public function canProcess($senderId, $conversationStateId, $text, $quickReplies, $attachments)
     {
         return $conversationStateId === static::STATE_ID && !empty($text);

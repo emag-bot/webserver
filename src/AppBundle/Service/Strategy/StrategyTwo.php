@@ -13,18 +13,28 @@ class StrategyTwo extends AbstractStrategy
     const TYPE = 'image';
     protected $quickReplies = [['title' => 'This was helpful, thanks :D!', 'payload' => 1, "content_type" => "text"], ['title' => 'My product was not listed :(' , 'payload' => 2, "content_type" => "text"]];
 
+    /**
+     * @param User $user
+     * @param $text
+     * @param $quickReplies
+     * @param $attachments
+     * @return bool
+     */
     public function process(User $user, $text, $quickReplies, $attachments)
     {
         foreach ($attachments as $attachment) {
             if (!empty($attachment['type']) && $attachment['type'] === static::TYPE && !empty($attachment['payload']['url'])) {
-                $url = $this->downloadLocal($attachment['payload']['url']);
-                $labels = $this->visionApiService->getLabels($url);
-//                error_log("Got labels: " . json_encode($labels));
-                $ids = $this->gearmanService->getProductsByLabels($url, $labels);
-//                $ids = [306];
-//                error_log("Got ids: " . json_encode($ids));
+//                $url = $this->downloadLocal($attachment['payload']['url']);
+//                $labels = $this->visionApiService->getLabels($url);
+//                $ids = $this->gearmanService->getProductsByLabels($url, $labels);
+//                $top = array_splice($ids, 0 , 3);
 
-                $top = array_splice($ids, 0 , 3);
+                $top = [159];
+
+                if (empty($top)) {
+                    $this->fbApiService->sendMessage($user->getFacebookId(), 'We couldn not find a match. Please send another picture.');
+                    return false;
+                }
                 $this->fbApiService->sendProducts($user->getFacebookId(), $this->getProducts($top), $this->quickReplies);
             }
         }
@@ -32,6 +42,14 @@ class StrategyTwo extends AbstractStrategy
         $this->entityManager->flush($user);
     }
 
+    /**
+     * @param $senderId
+     * @param $conversationStateId
+     * @param $text
+     * @param $quickReplies
+     * @param $attachments
+     * @return bool
+     */
     public function canProcess($senderId, $conversationStateId, $text, $quickReplies, $attachments)
     {
         return $conversationStateId === static::STATE_ID && !empty($attachments);
@@ -82,6 +100,9 @@ class StrategyTwo extends AbstractStrategy
         return 'http://static.emag-bot.com/' . $guid . '.png';
     }
 
+    /**
+     * @return string
+     */
     public function generateGuid()
     {
         $data = openssl_random_pseudo_bytes(16);

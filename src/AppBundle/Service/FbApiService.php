@@ -3,6 +3,7 @@
 namespace AppBundle\Service;
 
 use AppBundle\Dto\FbAttachmentDto;
+use AppBundle\Dto\FbDefaultActionDto;
 use AppBundle\Dto\FbElementDto;
 use AppBundle\Dto\FbMessageDto;
 use AppBundle\Dto\FbMessagingDto;
@@ -117,15 +118,21 @@ class FbApiService
         $element =  new FbElementDto();
 
         $element->setTitle("Products");
-        $element->setImageUrl("http://dunareacentermall.ro/wp-content/uploads/2013/08/logo_eMAG-patrat.png");
+        $element->setImageUrl("https://scontent-frt3-1.xx.fbcdn.net/v/t1.0-9/21432843_122607588395811_2614622230911058872_n.jpg?oh=834f95e16c82d670c1300d2fffa15aec&oe=5A1651AE");
 
         $payload->addElement($element);
 
         foreach ($products as $product) {
             $element = new FbElementDto();
             $element->setTitle($product->getName());
+
+            $defaultAction = new FbDefaultActionDto();
             /** @var Image $image */
             $image = $product->getImages()->first();
+            $defaultAction->setUrl($product->getLink());
+
+            $element->setDefaultAction($defaultAction);
+
             $element->setImageUrl($image->getUrl());
             $payload->addElement($element);
         }
@@ -154,6 +161,8 @@ class FbApiService
                 'Content-Type' => 'application/json'
             ]
         ];
-        $this->client->post('', $options);
+
+        $res = $this->client->post('', $options);
+        var_dump($res->getBody()->getContents());die;
     }
 }

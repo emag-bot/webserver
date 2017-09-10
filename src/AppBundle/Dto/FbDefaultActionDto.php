@@ -20,17 +20,27 @@ class FbDefaultActionDto implements DtoInterface
         $data = [];
 
 
-        if (!is_null($this->type)) {
+        if (!empty($this->type)) {
             $data['type'] = $this->type;
         }
 
-        if (!is_null($this->url)) {
+        if (!empty($this->url)) {
             $data['url'] = $this->url;
         }
+
+        return $data;
     }
 
     public function create(array $data)
     {
         // TODO: Implement create() method.
+    }
+
+    /**
+     * @param mixed $url
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 }

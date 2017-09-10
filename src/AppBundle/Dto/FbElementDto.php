@@ -31,7 +31,7 @@ class FbElementDto implements DtoInterface
         }
 
         if (!is_null($this->defaultAction)) {
-            $data['default_action'] = $this->defaultAction;
+            $data['default_action'] = $this->defaultAction->export();
         }
 
         return$data;
