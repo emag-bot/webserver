@@ -24,12 +24,10 @@ class StrategyTwo extends AbstractStrategy
     {
         foreach ($attachments as $attachment) {
             if (!empty($attachment['type']) && $attachment['type'] === static::TYPE && !empty($attachment['payload']['url'])) {
-//                $url = $this->downloadLocal($attachment['payload']['url']);
-//                $labels = $this->visionApiService->getLabels($url);
-//                $ids = $this->gearmanService->getProductsByLabels($url, $labels);
-//                $top = array_splice($ids, 0 , 3);
-
-                $top = [159];
+                $url = $this->downloadLocal($attachment['payload']['url']);
+                $labels = $this->visionApiService->getLabels($url);
+                $ids = $this->gearmanService->getProductsByLabels($url, $labels);
+                $top = array_splice($ids, 0 , 3);
 
                 if (empty($top)) {
                     $this->fbApiService->sendMessage($user->getFacebookId(), 'We couldn not find a match. Please send another picture.');
