@@ -8,10 +8,10 @@ class FbAttachmentDto
     /**
      * @var string
      */
-    protected $type;
+    protected $type = 'template';
 
     /**
-     * @var string
+     * @var FbPayloadDto
      */
     protected $payload;
 
@@ -25,8 +25,10 @@ class FbAttachmentDto
         }
 
         if (!empty($data['payload'])) {
-            $this->payload = $data['payload'];
+            $this->payload = new FbPayloadDto();
+            $this->payload->create($data['payload']);
         }
+
     }
 
     /**
@@ -36,12 +38,12 @@ class FbAttachmentDto
     {
         $data = [];
 
-        if (!empty($this->contentType)) {
+        if (!empty($this->type)) {
             $data['type'] = $this->type;
         }
 
-        if (!empty($this->payload)) {
-            $data['payload'] = $this->payload;
+        if (!empty($this->type)) {
+            $data['payload'] = $this->payload->export();
         }
 
         return $data;

@@ -55,7 +55,6 @@ class ApiController extends Controller
             $attachments = !empty($attachments['attachments']) ? $attachments['attachments'] : [];
             $this->get('quick.reply.service')->handle($senderId, $text, $quickReplies, $attachments);
             $logger->addInfo("Got message: [{$message->getMessage()->getText()}] from [{$message->getSender()->getId()}]");
-//            $fbApiService->sendMessage($senderId, $text, $quickReplies);
         }
 
 

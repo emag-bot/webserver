@@ -21,6 +21,7 @@
             <argument type="service" id="doctrine.orm.entity_manager"/>
             <argument type="service" id="fb.api.service"/>
             <argument type="service" id="vision.api.service"/>
+            <argument type="service" id="gearman.service"/>
         </service>
         <service id="strategy.one" class="AppBundle\Service\Strategy\StrategyOne" parent="abstract.strategy">
             <tag name="quick-reply-strategy"/>

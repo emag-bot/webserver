@@ -30,4 +30,20 @@ class GearmanService
     {
         return $this->client->doNormal('getrawdata', $url);
     }
+
+    /**
+     * @param string $url
+     * @param array $labels
+     * @return array
+     */
+    public function getProductsByLabels(string $url, array $labels = [])
+    {
+
+        $data = [
+            'url' => $url,
+            'labels' => $labels
+        ];
+
+        return json_decode($this->client->doNormal('imgrecon', json_encode($data, JSON_UNESCAPED_SLASHES)), true);
+    }
 }

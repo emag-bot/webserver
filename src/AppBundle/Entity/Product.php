@@ -39,16 +39,9 @@ class Product
     /**
      * @var string
      *
-     * @ORM\Column(name="brand", type="string", length=40)
+     * @ORM\Column(name="metadata", type="string", length=1000)
      */
-    private $brand;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="category", type="string", length=40)
-     */
-    private $category;
+    private $metadata;
 
     /**
      * @var ArrayCollection
@@ -124,51 +117,19 @@ class Product
     }
 
     /**
-     * Set brand
-     *
-     * @param string $brand
-     *
-     * @return Product
-     */
-    public function setBrand($brand)
-    {
-        $this->brand = $brand;
-
-        return $this;
-    }
-
-    /**
-     * Get brand
-     *
      * @return string
      */
-    public function getBrand()
+    public function getMetadata()
     {
-        return $this->brand;
+        return $this->metadata;
     }
 
     /**
-     * Set category
-     *
-     * @param string $category
-     *
-     * @return Product
+     * @param string $metadata
      */
-    public function setCategory($category)
+    public function setMetadata($metadata)
     {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    /**
-     * Get category
-     *
-     * @return string
-     */
-    public function getCategory()
-    {
-        return $this->category;
+        $this->metadata = $metadata;
     }
 
     /**
@@ -186,4 +147,3 @@ class Product
         $image->setProduct($this);
     }
 }
-
