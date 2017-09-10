@@ -19,11 +19,21 @@
         </service>
         <service id="abstract.strategy" class="AppBundle\Service\Strategy\AbstractStrategy">
             <argument type="service" id="doctrine.orm.entity_manager"/>
+            <argument type="service" id="fb.api.service"/>
+            <argument type="service" id="vision.api.service"/>
         </service>
-        <service id="strategy.one" class="AppBundle\Service\Strategy\StrategyOne">
+        <service id="strategy.one" class="AppBundle\Service\Strategy\StrategyOne" parent="abstract.strategy">
             <tag name="quick-reply-strategy"/>
         </service>
-        <service id="quick.reply.service" class="AppBundle\Service\QuickReplyService"/>
+        <service id="strategy.two" class="AppBundle\Service\Strategy\StrategyTwo" parent="abstract.strategy">
+            <tag name="quick-reply-strategy"/>
+        </service>
+        <service id="strategy.three" class="AppBundle\Service\Strategy\StrategyThree" parent="abstract.strategy">
+            <tag name="quick-reply-strategy"/>
+        </service>
+        <service id="quick.reply.service" class="AppBundle\Service\QuickReplyService">
+            <argument type="service" id="doctrine.orm.entity_manager"/>
+        </service>
         <service id="gearman.service" class="AppBundle\Service\GearmanService">
         </service>
     </services>

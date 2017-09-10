@@ -16,6 +16,7 @@ use AppBundle\Dto\FbSenderDto;
 use AppBundle\Entity\Image;
 use AppBundle\Entity\Label;
 use AppBundle\Entity\Product;
+use AppBundle\Entity\User;
 use AppBundle\Service\FbApiService;
 use AppBundle\Service\VisionApiService;
 use GuzzleHttp\Client;
@@ -47,12 +48,14 @@ class ApiController extends Controller
                 return new JsonResponse();
             }
             $this->get('user.service')->checkUser($senderId);
-            $logger->addInfo("Got message: [{$message->getMessage()->getText()}] from [{$message->getSender()->getId()}]");
-
-            $text = strrev($message->getMessage()->getText());
+            $text = $message->getMessage()->getText();
             $quickReplies = $message->getMessage()->export();
             $quickReplies = !empty($quickReplies['quick_replies']) ? $quickReplies['quick_replies'] : [];
-            $fbApiService->sendMessage($senderId, $text, $quickReplies);
+            $attachments = $message->getMessage()->export();
+            $attachments = !empty($attachments['attachments']) ? $attachments['attachments'] : [];
+            $this->get('quick.reply.service')->handle($senderId, $text, $quickReplies, $attachments);
+            $logger->addInfo("Got message: [{$message->getMessage()->getText()}] from [{$message->getSender()->getId()}]");
+//            $fbApiService->sendMessage($senderId, $text, $quickReplies);
         }
 
 

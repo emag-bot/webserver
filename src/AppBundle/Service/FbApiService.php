@@ -2,6 +2,7 @@
 
 namespace AppBundle\Service;
 
+use AppBundle\Dto\FbAttachmentDto;
 use AppBundle\Dto\FbMessageDto;
 use AppBundle\Dto\FbMessagingDto;
 use AppBundle\Dto\FbQuickReplyDto;
@@ -47,7 +48,7 @@ class FbApiService
      * @param string $text
      * @param array $quickReplies
      */
-    public function sendMessage(int $recipientId, string $text = '', $quickReplies = [])
+    public function sendMessage(int $recipientId, string $text = '', $quickReplies = [], $attachments = [])
     {
         $request = new FbMessagingDto();
 
@@ -67,7 +68,17 @@ class FbApiService
                 $quickRepliesDtos[] = $quickReplyDto;
             }
             $message->setQuickReplies($quickRepliesDtos);
-        }var_dump($message);die;
+        }
+
+        if (!empty($attachments)) {
+            $attachmentsDtos = [];
+            foreach ($attachments as $attachment) {
+                $attachmentDto = new FbAttachmentDto();
+                $attachmentDto->create($attachment);
+                $attachmentsDtos[] = $attachmentDto;
+            }
+            $message->setAttachments($attachmentsDtos);
+        }
 
         $request->setRecipient($recipient);
         $request->setMessage($message);

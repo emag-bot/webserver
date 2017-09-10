@@ -17,6 +17,11 @@ class FbMessageDto implements DtoInterface
     protected $quickReplies;
 
     /**
+     * @var array
+     */
+    protected $attachments;
+
+    /**
      * @return array
      */
     public function export(): array
@@ -31,6 +36,13 @@ class FbMessageDto implements DtoInterface
             /** @var FbQuickReplyDto $quickReply */
             foreach ($this->quickReplies as $quickReply) {
                 $data['quick_replies'][] = $quickReply;
+            }
+        }
+
+        if (!empty($this->attachments)) {
+            /** @var FbAttachmentDto $quickReply */
+            foreach ($this->attachments as $attachment) {
+                $data['attachments'][] = $attachment;
             }
         }
 
@@ -50,6 +62,10 @@ class FbMessageDto implements DtoInterface
             $this->quickReplies = $data['quick_replies'];
         } elseif (!empty($data['quick_reply'])) {
             $this->quickReplies[] = $data['quick_reply'];
+        }
+
+        if (!empty($data['attachments'])) {
+            $this->attachments = $data['attachments'];
         }
     }
 
@@ -81,6 +97,24 @@ class FbMessageDto implements DtoInterface
     public function setQuickReplies($quickReplies)
     {
         $this->quickReplies = $quickReplies;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAttachments()
+    {
+        return $this->attachments;
+    }
+
+    /**
+     * @param array $attachments
+     * @return FbMessageDto
+     */
+    public function setAttachments($attachments)
+    {
+        $this->attachments = $attachments;
         return $this;
     }
 }

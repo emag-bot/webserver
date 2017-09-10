@@ -34,8 +34,12 @@ class VisionApiService
         );
     }
 
-    public function getLabels(string $url)
+    public function getLabels(string $url, $download = false)
     {
+        if ($download == true) {
+            $url = $this->downloadLocal($url);
+        }
+
         $request = [
             "requests" => [
                 [
@@ -71,5 +75,41 @@ class VisionApiService
         }
 
         return $labels;
+    }
+
+    /**
+     * @param $url
+     */
+    public function downloadLocal($url)
+    {
+        $client = new Client();
+
+        $guid = $this->generateGuid();
+        $path = '/var/www/static/' . $guid;
+
+        $resource = fopen($path, 'w');
+        $response = $client->get($url, [
+            'sink' => $resource
+        ]);
+
+        $type = $response->getHeaderLine("Content-Type");
+
+        if ($type == "image/jpeg") {
+            $raw = imagecreatefromjpeg($path);
+            imagepng($raw, $path . '.png');
+            unlink($path);
+        } else {
+            rename($path, $path . '.png');
+        }
+
+        return 'http://static.emag-bot.com/' . $guid . '.png';
+    }
+
+    public function generateGuid()
+    {
+        $data = openssl_random_pseudo_bytes(16);
+        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);    // set version to 0100
+        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);    // set bits 6-7 to 10
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
     }
 }
