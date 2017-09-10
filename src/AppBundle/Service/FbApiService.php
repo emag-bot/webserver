@@ -162,7 +162,6 @@ class FbApiService
             ]
         ];
 
-        $res = $this->client->post('', $options);
-        var_dump($res->getBody()->getContents());die;
+        $this->client->post('', $options);
     }
 }

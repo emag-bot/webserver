@@ -11,6 +11,8 @@ class StrategyOne extends AbstractStrategy
 
     private $childStates = [StrategyTwo::STATE_ID];
 
+    protected $greetings = ['Please send us a picture of what you want to buy :)', 'Can i help you with some products?', "Don't be shy, send me a picture and i'll find you the product :D"];
+
     /**
      * @param User $user
      * @param $text
@@ -21,7 +23,7 @@ class StrategyOne extends AbstractStrategy
     {
         $user->setConverstationStateId(StrategyTwo::STATE_ID);
         $this->entityManager->flush();
-        $this->fbApiService->sendMessage($user->getFacebookId(), 'Please send us a picture of what you want to buy :)', [], []);
+        $this->fbApiService->sendMessage($user->getFacebookId(), $this->greetings[rand(0,2)], [], []);
     }
 
     /**

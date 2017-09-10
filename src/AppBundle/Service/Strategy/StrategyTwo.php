@@ -11,7 +11,7 @@ class StrategyTwo extends AbstractStrategy
 {
     const STATE_ID = 2;
     const TYPE = 'image';
-    protected $quickReplies = [['title' => 'This was helpful, thanks :D!', 'payload' => 1, "content_type" => "text"], ['title' => 'My product was not listed :(' , 'payload' => 2, "content_type" => "text"]];
+    protected $quickReplies = [['title' => 'Found it! :)', 'payload' => 1, "content_type" => "text"], ['title' => 'Not here :(' , 'payload' => 2, "content_type" => "text"]];
 
     /**
      * @param User $user
